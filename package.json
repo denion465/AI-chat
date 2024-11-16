@@ -1,0 +1,28 @@
+{
+  "name": "ai-chat",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --watch src/server.js",
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand test/",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --watchAll test/",
+    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --runInBand"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "Daniel Vidal",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "eslint": "^9.14.0",
+    "globals": "^15.12.0",
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": "22"
+  }
+}
