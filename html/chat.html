@@ -13,6 +13,7 @@
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
+      line-height: 1.4;
     }
 
     .container {
@@ -22,8 +23,8 @@
       background-color: #282A36;
       width: 100%;
       height: 100%;
-      padding: 0 150px 30px;
       box-sizing: border-box;
+      align-items: center;
     }
 
     .messages {
@@ -36,7 +37,9 @@
       padding: 20px 50px;
       border-radius: 10px;
       margin-bottom: 10px;
-      max-height: 70%;
+      width: 100%;
+      max-width: 50%;
+      max-height: calc(100% - 166px);
     }
 
     .message {
@@ -46,7 +49,6 @@
       margin: 5px 0;
       border-radius: 10px;
       white-space: break-spaces;
-      line-height: 1.4;
       max-width: 70%;
       align-self: center;
     }
@@ -63,6 +65,7 @@
       display: flex;
       justify-content: space-between;
       width: 100%;
+      max-width: 55%;
       padding: 10px;
     }
 
@@ -87,39 +90,39 @@
       background-color: #8f9bb8;
     }
 
-  .header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background-color: #44475a;
-    color: white;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-  }
+    .header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: #44475a;
+      color: white;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    }
 
-  .header-title {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 30px;
-    font-weight: bolder;
-  }
+    .header-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 30px;
+      font-weight: bolder;
+    }
 
-  .header-links {
-    display: flex;
-    gap: 20px;
-    padding-right: 150px;
-    align-items: center;
-    margin-left: auto;
-  }
+    .header-links {
+      display: flex;
+      gap: 20px;
+      padding-right: 150px;
+      align-items: center;
+      margin-left: auto;
+    }
 
-  .bold-text {
-    font-weight: bold;
-  }
+    .bold-text {
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -129,12 +132,12 @@
       <div class="header-title">IA Chat</div>
       <div class="header-links">
         <div>
-          <a href="https://github.com/denion465/" target="_blank">
+          <a href="https://github.com/denion465/" target="_blank" title="Visit my Github">
             <img src="./svg/github.svg" alt="GitHub" width="24" height="24">
           </a>
         </div>
         <div>
-          <a href="https://www.linkedin.com/in/daniel-vidal465/" target="_blank">
+          <a href="https://www.linkedin.com/in/daniel-vidal465/" target="_blank" title="Visit my Linkedin">
             <img src="./svg/linkedin.svg" alt="LinkedIn" width="32" height="32">
           </a>
         </div>
@@ -143,7 +146,7 @@
     <div class="messages" id="messages"></div>
     <div class="input-area">
       <input type="text" id="messageInput" class="input-field" placeholder="Type a message..." />
-      <button class="send-btn" onclick="sendMessage()">Send</button>
+      <button class="send-btn" id="send-btn" onclick="sendMessage()">Send</button>
     </div>
   </div>
 
@@ -174,10 +177,12 @@
       if (messageText) {
         messageElement.classList.add('message');
         messageElement.classList.add('sent');
-        messageElement.innerHTML = `<span class="bold-text">Usuário</span> \n ${messageText}`;
+        messageElement.innerHTML = `<span class="bold-text">User</span> \n${messageText}`;
         messagesContainer.appendChild(messageElement);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
         ws.send(messageText);
         messageInput.value = '';
+        document.getElementById("send-btn").disabled = true;
       }
     }
 
@@ -187,25 +192,28 @@
         msgElement = document.createElement('div');
         msgElement.classList.add('message');
         msgElement.classList.add('received');
-        msgElement.innerHTML = '<span class="bold-text">AI</span>';
+        msgElement.innerHTML = '<span class="bold-text">AI</span>\n';
       }
 
-      const lastLetter = message.charAt(message.length - 1);
-      if (lastLetter === '>') message = message.slice(0, -2); // Remove '\n' and '>' in last caracteres
+      const lastMessage = (message.charAt(message.length - 1)) === '>';
+      if (lastMessage) {
+        message = message.slice(0, -2); // Remove '\n' and '>' in last message
+      }
 
-      const msg = lastLetter === '>' ? message : `${message} \n`;
-      msgElement.innerHTML += `\n ${msg}`;
+      msgElement.innerHTML += lastMessage ? message.trim() : `${message}\n`;
       messagesContainer.appendChild(msgElement);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-      if (lastLetter === '>') {
+      if (lastMessage) {
+        document.getElementById("send-btn").disabled = false;
         msgElement = undefined;
       };
     }
 
     // To allow sending message when pressing 'Enter' key
     document.getElementById('messageInput').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
+      const buttonDisabled = !!(document.getElementById("send-btn").disabled);
+      if (e.key === 'Enter' && !buttonDisabled) {
         sendMessage();
       }
     });
