@@ -1,18 +1,18 @@
 class WebSocketCommunication {
   #ws;
   #wsClient = null;
-  #dockerProcess;
+  #aiProcess;
   #isReplyUserMessage = true;
   #accumulatedData = '';
 
-  constructor(ws, dockerProcess) {
+  constructor(ws, aiProcess) {
     this.#ws = ws;
-    this.#dockerProcess = dockerProcess;
+    this.#aiProcess = aiProcess;
   }
 
   handleWebSocketCommunication() {
     this.#ws.on('connection', (ws) => this.#handleWebSocketConnection(ws));
-    this.#dockerProcess.stdout.on('data', (data) => this.#handleAIOutput(data));
+    this.#aiProcess.stdout.on('data', (data) => this.#handleAIOutput(data));
   }
 
   #handleWebSocketConnection(ws) {
@@ -30,7 +30,8 @@ class WebSocketCommunication {
   }
 
   #sendMessageToAI(message) {
-    this.#dockerProcess.stdin.write(`${message} \n`);
+    const msg = message.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    this.#aiProcess.stdin.write(`${msg} \n`);
   }
 
   #handleAIOutput(data) {

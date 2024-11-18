@@ -1,23 +1,25 @@
 import { describe, expect, it, jest, beforeEach } from '@jest/globals';
-import { WebSocketCommunication } from '../src/websocket.js';
+import { WebSocketCommunication } from '../src/websocket-communication.js';
 
-describe('#WebSocket Test Suit', () => {
-  let mockWebSocketServer;
-  let mockDockerProcess;
-  let mockWebSocketInstance;
+describe('#WebSocketCommunication Test Suite', () => {
+  let _mockWebSocketServer;
+  let _mockAIProcess;
+  let _mockWebSocketInstance;
 
   beforeEach(() => {
-    mockWebSocketServer = {
+    jest.spyOn(console, 'log').mockImplementation(() => {}); // Silenced the console.log
+
+    _mockWebSocketServer = {
       on: jest.fn((_event, callback) => {
-        mockWebSocketInstance = {
+        _mockWebSocketInstance = {
           on: jest.fn(),
           send: jest.fn(),
         };
-        callback(mockWebSocketInstance);
+        callback(_mockWebSocketInstance);
       }),
     };
 
-    mockDockerProcess = {
+    _mockAIProcess = {
       stdin: {
         write: jest.fn(),
       },
@@ -26,23 +28,23 @@ describe('#WebSocket Test Suit', () => {
       },
     };
 
-    const webSocketCommunication = new WebSocketCommunication(mockWebSocketServer, mockDockerProcess);
+    const webSocketCommunication = new WebSocketCommunication(_mockWebSocketServer, _mockAIProcess);
     webSocketCommunication.handleWebSocketCommunication();
   });
 
-  it('should write to Docker Process stdin when receiving a message on WebSocket', () => {
-    const mockMessageCallback = mockWebSocketInstance.on.mock.calls.find(
+  it('should write to AI Process stdin when receiving a message on WebSocket', () => {
+    const mockMessageCallback = _mockWebSocketInstance.on.mock.calls.find(
       ([event]) => event === 'message',
     )[1];
 
     const message = 'Input Test';
     mockMessageCallback(message);
 
-    expect(mockDockerProcess.stdin.write).toHaveBeenCalledWith(`${message} \n`);
+    expect(_mockAIProcess.stdin.write).toHaveBeenCalledWith(`${message} \n`);
   });
 
   it('should not send a message to the user if it is the first stdout reply', () => {
-    const mockStdoutCallback = mockDockerProcess.stdout.on.mock.calls.find(
+    const mockStdoutCallback = _mockAIProcess.stdout.on.mock.calls.find(
       ([event]) => event === 'data',
     )[1];
 
@@ -53,11 +55,11 @@ describe('#WebSocket Test Suit', () => {
     mockStdoutCallback(dataChunk1);
     mockStdoutCallback(dataChunk2);
 
-    expect(mockWebSocketInstance.send).not.toHaveBeenCalledWith(userReply);
+    expect(_mockWebSocketInstance.send).not.toHaveBeenCalledWith(userReply);
   });
 
-  it('should send complete messages via WebSocket when processing DockerProcess stdout', () => {
-    const mockStdoutCallback = mockDockerProcess.stdout.on.mock.calls.find(
+  it('should send complete messages via WebSocket when processing AI stdout', () => {
+    const mockStdoutCallback = _mockAIProcess.stdout.on.mock.calls.find(
       ([event]) => event === 'data',
     )[1];
 
@@ -71,17 +73,16 @@ describe('#WebSocket Test Suit', () => {
 
     const expectedMessage = `${dataChunk1}${dataChunk2}`.trim();
 
-    expect(mockWebSocketInstance.send).toHaveBeenCalledWith(expectedMessage);
-
+    expect(_mockWebSocketInstance.send).toHaveBeenCalledWith(expectedMessage);
   });
 
   it('should close the WebSocket when receiving the event to close it', () => {
-    const mockCloseCallback = mockWebSocketInstance.on.mock.calls.find(
+    const mockCloseCallback = _mockWebSocketInstance.on.mock.calls.find(
       ([event]) => event === 'close',
     )[1];
 
     mockCloseCallback();
 
-    expect(mockWebSocketInstance.send).not.toHaveBeenCalled();
+    expect(_mockWebSocketInstance.send).not.toHaveBeenCalled();
   });
 });

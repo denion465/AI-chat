@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "start:watch": "node --watch src/server.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand test/",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --watchAll test/",
     "test:coverage": "NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --runInBand"
