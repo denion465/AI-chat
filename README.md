@@ -8,12 +8,15 @@ Uma aplicação de chat com IA, que roda inteiramente dentro de um ambiente Dock
 
 ## 🛠️ Recursos
 
-- **Chat com IA:** Interação em tempo real com um modelo de linguagem.
-- **Containerizado:** Toda a aplicação roda dentro de contêineres Docker, facilitando a instalação e a execução.
-- **Escalável:** Configuração simples para rodar em diferentes ambientes.
-- **WebSocket:** Comunicação rápida e eficiente entre cliente e servidor.
-- **Node.js:** Backend desenvolvido com módulos nativos do Node.js, garantindo desempenho e eficiência.
-- **LLaMA.cpp:** Ferramenta essencial para a integração do modelo, permitindo a execução otimizada de IA em ambientes locais, sem necessidade de recursos externos..
+1. **Desenvolvido com Node.js:** Backend construído com módulos nativos do Node.js, proporcionando alto desempenho e uma base sólida para extensibilidade.
+
+2. **Chat com IA:** Oferece interação em tempo real com um modelo de linguagem avançado, proporcionando respostas rápidas e precisas para uma experiência dinâmica.
+
+3. **WebSocket:** Utiliza WebSockets para comunicação bidirecional em tempo real entre cliente e servidor, garantindo eficiência e baixa latência na troca de dados.
+
+4. **Containerização com Docker:** Toda a aplicação é empacotada em um container Docker, simplificando o processo de instalação, configuração e execução, além de garantir portabilidade entre diferentes ambientes.
+
+5. **Integração com LLaMA.cpp:** Aproveita a eficiência do LLaMA.cpp para executar modelos de linguagem diretamente no ambiente local, eliminando a necessidade de dependências externas ou serviços em nuvem.
 
 ---
 
