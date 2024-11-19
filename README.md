@@ -12,6 +12,8 @@ Uma aplicação de chat com IA, que roda inteiramente dentro de um ambiente Dock
 - **Containerizado:** Toda a aplicação roda dentro de contêineres Docker, facilitando a instalação e a execução.
 - **Escalável:** Configuração simples para rodar em diferentes ambientes.
 - **WebSocket:** Comunicação rápida e eficiente entre cliente e servidor.
+- **Node.js:** Backend desenvolvido com módulos nativos do Node.js, garantindo desempenho e eficiência.
+- **LLaMA.cpp:** Ferramenta essencial para a integração do modelo, permitindo a execução otimizada de IA em ambientes locais, sem necessidade de recursos externos..
 
 ---
 
@@ -72,3 +74,5 @@ docker run -it --name ai-chat -p 8080:8080 ai-chat
 ## ❤️ Agradecimentos
 - Modelo de IA:
   - Fonte: [Hugging Face](https://huggingface.co/MaziyarPanahi/Qwen2-7B-Instruct-GGUF/)
+- LLaMA.cpp:
+  - Repositório oficial: [LLaMA.cpp](https://github.com/ggerganov/llama.cpp)
